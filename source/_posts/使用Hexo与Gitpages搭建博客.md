@@ -110,7 +110,7 @@ $ npm install
 └── themes    # 主题文件夹。Hexo会根据主题来生成静态页面。
 ```
 
-#### 配置
+#### Hexo基本配置
 
 在blog目录下，_config.yml中为用户可以自定义的配置，我们可以从[Hexo官网](https://hexo.io/zh-cn/docs/configuration.html)了解各个参数的意义。
 下面列出我搭建时的修改项。
@@ -152,29 +152,120 @@ permalink_defaults:
 |permalink|文章的永久链接格式|:year/:month/:day/:title/|
 |permalink_defaults|永久链接中各部分的默认值|　|
  
+以上参数自定义完成后可以执行`hexo g`生成静态页面
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605102944249.png)
+
+然后输入命令`hexo s --debug`，以debug模式启动hexo的server模块
+
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605103346674.png)
+
+待启动成功后可以使用浏览器输入本地回环地址`http://localhost:4000/` or `http://127.0.0.1:4000/`访问你所创建的博客页面。
+
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605103708454.png)
+
+以上基本配置已经完成，接下来我们来学习一下文章的创建，主题的配置，以及将本地搭建完成的博客部署到gitgub。
 
 
-{% quote liyang, shadowless http://shadowless.top help %}
-s
-{% endquote %}
+#### 新建文章
 
-{% quote liyang, shadowless %}
-a
-{% endquote %}
-
-{% label success@test %}{% label primary@Text %}
+我们可以使用 `hexo new post “文章名”`来新建一篇文章
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605104559869.png)
+新建的内容会在`blog/source/_posts/`目录中，由你指定的文章名命名，后缀为`.md`。
+我们可以直接使用markdown语法编写该文件。
 
 
- {% note  info%}
- Any content (support inline tags too).
- {% endnote %}
- 
- 
- 
-  * {% exturl text url "title" %}
-      * {% extlink what? http://shadowless.top "shadowless" %}
+## 将博客部署到Github
 
- {% centerquote %}Something{% endcenterquote %}
- {% cq %}Something{% endcq %}
- 
- {% button http://shadowless.top, text, icon button, title %}
+### Github账户与仓库配置
+
+#### 新建仓库
+首先我们打开[“全球最大同性交友网站gayhub”](https://github.com/)，然后注册一个账户。
+
+登录账户，在网页上方状态栏找到一个加号，点击New repository。
+
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605105321620.png)
+
+接下来会让你填写仓库名称，这里需要填写的格式为：`用户名.github.io`。
+如图所示，设置为public仓库，可以不用README初始化仓库，也可以不添加.gitignore和license。
+然后点击下方`Create repository`即可。
+
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605105605162.png)
+
+完成后我们会跳转至该仓库，在该页会有在本地添加远程仓库的指导以及HTTPS和SSH链接。
+
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605110157400.png)
+
+#### 配置SSH keys
+我们选择使用ssh进行部署。需要生成一对ssh认证的密钥，然后将公钥添加到你的github账户。
+
+分为如下步骤:
+* 检查SSH keys是否存在
+* 生成新的ssh key
+* 将ssh key添加到GitHub中
+
+
+![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605110650809.png)
+
+1. keys所在目录为`~/.ssh/`中，检查目标文件`id_rsa`, `id_rsa.pub`是否存在。![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605110828788.png)
+
+2.  若文件不存在，我们需要重新生成密钥。
+    在命令行中输入`ssh-keygen -t rsa -C "your_email@example.com"`，为了方便可以一路按回车，不需要输入其他内容，默认会在相应路径下（/your_home_path）生成id_rsa和id_rsa.pub两个文件，如下面代码所示
+    ```bash
+    ssh-keygen -t rsa -C "your_email@example.com"
+    # Creates a new ssh key using the provided email
+    Generating public/private rsa key pair.
+    Enter file in which to save the key (/your_home_path/.ssh/id_rsa):
+    ```
+3. 将新生成的key添加到ssh-agent中:
+    ```bash
+    # start the ssh-agent in the background
+    eval "$(ssh-agent -s)"
+    Agent pid 59566
+    ssh-add ~/.ssh/id_rsa
+    ```
+
+将ssh key添加到GitHub中:
+
+- 打开Github，点击右上角加号，选择Settings
+
+    ![](http://p9lal5uqx.bkt.clouddn.com/使用Hexo与Gitpages搭建博客/20180605112652130.png)
+
+- 选择左侧一列中`SSH and GPG keys`。
+- 选择`New SSH key`。
+- 打开本地`~/.ssh/id_rsa.pub`文件将其中内容复制出来，粘贴到github页面key的输入框中。
+- 点击 add SSH Key完成添加
+
+#### 修改配置文件
+
+打开博客根目录下的`_config.yml`配置文件，找到deploy一栏，按照如下模板填写。
+
+```bash
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repo: 你github仓库的SSH链接
+  branch: master
+  message: update my blog
+```
+
+#### 将博客部署到远程
+
+首先我们需要生成网页的静态文件：
+```bash
+hexo generate
+```
+然后使用命令将生成的静态文件PUSH到github远程仓库：
+```bash
+hexo deploy
+```
+等待完成后可以访问`你的用户名.github.io`来进入博客了。
+
+每次更新文章后都可以使用`hexo generate`生成静态文件，再`hexo deploy`将其push到github。
+
+
+{% note info %}
+后续会增加关于[Next主题](http://theme-next.iissnan.com/)的配置
+{% endnote %}
+
+{% button http://shadowless.top, HOME, icon button, title %}
