@@ -51,6 +51,8 @@ Git是目前世界上最先进的分布式版本控制系统。我们可以使�
 
 {% exturl Node http://nodejs.cn/ Node.js官网 %}
 
+<!-- more -->
+
 #### Node.js安装
 使用[nvm](https://github.com/creationix/nvm)来安装Node.js
 {% tabs node.js, 1%}
@@ -109,6 +111,7 @@ $ npm install
 |   └── _posts
 └── themes    # 主题文件夹。Hexo会根据主题来生成静态页面。
 ```
+
 
 #### Hexo基本配置
 
