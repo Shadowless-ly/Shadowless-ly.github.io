@@ -34,6 +34,8 @@ $ python read_stdin.py < /etc/passwd
 $ python read_stdin.py -
 ```
 
+<!-- more -->
+
 `sys.stdin`为文件描述符，故拥有文件对象的方法，我们可以使用`read()`方法读取标准输入的所有内容，或者使用`readlines()`将标准输入内容读取到一个`list`中。
 
 ```python upper.py
