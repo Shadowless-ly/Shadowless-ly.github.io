@@ -56,15 +56,14 @@ Git是目前世界上最先进的分布式版本控制系统。我们可以使�
 
 #### Node.js安装
 使用[nvm](https://github.com/creationix/nvm)来安装Node.js
-{% tabs node.js, 1%}
+{% tabs nodejs, 1 %}
 <!-- tab cURL@download -->
-使用curl安装
+使用cURL安装
 `$ curl https://raw.github.com/creationix/nvm/master/install.sh | sh`
 <!-- endtab -->
 <!-- tab Wget@download -->
 使用Wget安装
 `$ wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh`
-<!-- endtab -->
 <!-- endtab -->
 {% endtabs %}
 
