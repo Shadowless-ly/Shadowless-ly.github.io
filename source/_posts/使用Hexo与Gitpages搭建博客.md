@@ -2,6 +2,7 @@
 title: 使用Hexo与Gitpages搭建博客
 comments: true
 date: 2018-06-03 22:02:48
+update: 2018-06-09
 tag: hexo
 categories: hexo
 top:
@@ -63,6 +64,7 @@ Git是目前世界上最先进的分布式版本控制系统。我们可以使�
 <!-- tab Wget@download -->
 使用Wget安装
 `$ wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh`
+<!-- endtab -->
 <!-- endtab -->
 {% endtabs %}
 
