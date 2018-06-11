@@ -55,15 +55,15 @@ p.read("config.ini")
 在生成了ConfigParser对象后，我们可以使用其read方法从配置文件读取配置内容，也可是使用readfp方法直接从文件描述符读取。
 
 常用的ConfigParser查询方法：
-sections: 返回一个包含所有section的列表
-has_sections: 判断章节是否存在
-items: 以元组的方式返回所有选项
-options: 返回一个包含该章节下所有选项的列表
-has_option: 判断某个选项是否存在
-get：取得选项的值
-getboolean：取得选项的值，boolean类型
-getint：取得选项的值，int类型
-getfloat: 取得选项的值，float类型
+`sections`: 返回一个包含所有section的列表
+`has_sections`: 判断章节是否存在
+`items`: 以元组的方式返回所有选项
+`options`: 返回一个包含该章节下所有选项的列表
+`has_option`: 判断某个选项是否存在
+`get`：取得选项的值
+`getboolean`：取得选项的值，boolean类型
+`getint`：取得选项的值，int类型
+`getfloat`: 取得选项的值，float类型
 
 ```python parse.py
 import configparser

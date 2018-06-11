@@ -263,7 +263,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">4</span></a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">5</span></a>
   </li>
 
       
@@ -329,6 +329,201 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shadowless.top/python/Python使用configparser解析配置文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shadowless">
+      <meta itemprop="description" content="求知若饥，虚心若愚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shadowless">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/python/Python使用configparser解析配置文件/" itemprop="url">
+                  Python使用configparser解析配置文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-11 21:31:57 / 修改时间：22:33:05" itemprop="dateCreated datePublished" datetime="2018-06-11T21:31:57+08:00">2018-06-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">2.9k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">3 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在linux中，有很多工具拥有自己的配置文件，如：<code>vim</code>的配置文件<code>~/.vimrc</code>,<code>pip</code>的配置文件<code>~/.pip/pip.conf</code>,<code>MySQL</code>客户端的配置文件<code>/etc/mysql/my.conf</code>等等。</p>
+<h1 id="ini配置文件"><a href="#ini配置文件" class="headerlink" title="ini配置文件"></a>ini配置文件</h1><p>使用配置文件，我们就无需每次启动设置参数。而且典型的ini配置文件与编程语言无关，可读性强。</p>
+<p>ini配置文件格式如下<br><figure class="highlight ini"><figcaption><span>config.ini</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[client]</span></span><br><span class="line"><span class="attr">port</span> = <span class="number">3306</span></span><br><span class="line"><span class="attr">user</span> = mysql</span><br><span class="line"><span class="attr">password</span> = mysql</span><br><span class="line"><span class="attr">host</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"></span><br><span class="line"><span class="section">[mysqld]</span></span><br><span class="line"><span class="attr">basedir</span> = /usr</span><br><span class="line"><span class="attr">datadir</span> = /var/lib/mysql</span><br><span class="line"><span class="attr">tmpdir</span> = /tmp</span><br><span class="line">skip-external-locking</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注释</span></span><br></pre></td></tr></table></figure></p>
+<p>其中<code>[client]</code>和<code>[mysqld]</code>为章节(section),章节下面的<code>port</code>,<code>user</code>,<code>password</code>,<code>host</code>这些为选项(option)</p>
+<h1 id="configparser解析配置文件"><a href="#configparser解析配置文件" class="headerlink" title="configparser解析配置文件"></a>configparser解析配置文件</h1><p>我们可以使用Python的configparser模块来解析配置文件。<br>首先我们需要将配置文件读取到内存，并创建一个ConfigParser对象。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/python/Python使用configparser解析配置文件/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -1221,7 +1416,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1355,7 +1550,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">19k</span>
+    <span title="站点总字数">22k</span>
   
 
   
@@ -1364,7 +1559,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">17 分钟</span>
+    <span title="站点阅读时长">20 分钟</span>
   
 </div>
 
