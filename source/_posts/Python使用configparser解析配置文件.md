@@ -36,6 +36,9 @@ skip-external-locking
 
 我们可以使用Python的configparser模块来解析配置文件。
 首先我们需要将配置文件读取到内存，并创建一个ConfigParser对象。
+
+<!-- more -->
+
 ```python
 import configparser
 
