@@ -275,7 +275,7 @@ Logger可以包含一个或多个Handler和Filter，即Logger与Handler或Fitler
 一个Logger实例可以新增多个Handler，一个Handler可以新增多个格式化器或多个过滤器，而且日志级别将会继承。
 
 
-![](/python日志模块logging使用介绍/20180617111350472.png)
+![](http://p9lal5uqx.bkt.clouddn.com/python日志模块logging使用介绍/20180617111350472.png)
 
 {% endquote %}
 
@@ -340,7 +340,7 @@ if __name__ == '__main__':
 
 # logging模块工作流程
 
-![](/python日志模块logging使用介绍/20180617112412833.png)
+![](http://p9lal5uqx.bkt.clouddn.com/python日志模块logging使用介绍/20180617112412833.png)
 
 1. 判断日志的等级是否大于Logger对象的等级，如果大于，则往下执行，否则，流程结束。
 2. 产生日志。第一步，判断是否有异常，如果有，则添加异常信息。第二步，处理日志记录方法(如debug，info等)中的占位符，即一般的字符串格式化处理。
