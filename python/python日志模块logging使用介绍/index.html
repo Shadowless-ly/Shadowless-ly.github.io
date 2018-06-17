@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-center-atom.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/timg32x32?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/timg16x16.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在平时编写Python脚本时，需要调试就加print打印出来观察，这种操作在写一些简单的脚本时是迅速有效的。但是当进行复杂的应用开发时，这样调试就显得力不从心。所以我们需要使用Python标准库中的logging模块，该模块可以定义日志格式，设置过滤信息，选择日志输出位置（文件、标准错误输出、网络等等）。 使用基本的logging配置在一般使用过程中，我们需要按照事件的严重程度将日志划分不同等级，">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python日志模块logging使用介绍">
+<meta property="og:url" content="http://shadowless.top/python/python日志模块logging使用介绍/index.html">
+<meta property="og:site_name" content="Shadowless">
+<meta property="og:description" content="在平时编写Python脚本时，需要调试就加print打印出来观察，这种操作在写一些简单的脚本时是迅速有效的。但是当进行复杂的应用开发时，这样调试就显得力不从心。所以我们需要使用Python标准库中的logging模块，该模块可以定义日志格式，设置过滤信息，选择日志输出位置（文件、标准错误输出、网络等等）。 使用基本的logging配置在一般使用过程中，我们需要按照事件的严重程度将日志划分不同等级，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://shadowless.top/python日志模块logging使用介绍/20180617111350472.png">
+<meta property="og:image" content="http://shadowless.top/python日志模块logging使用介绍/20180617112412833.png">
+<meta property="og:updated_time" content="2018-06-17T15:47:23.953Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python日志模块logging使用介绍">
+<meta name="twitter:description" content="在平时编写Python脚本时，需要调试就加print打印出来观察，这种操作在写一些简单的脚本时是迅速有效的。但是当进行复杂的应用开发时，这样调试就显得力不从心。所以我们需要使用Python标准库中的logging模块，该模块可以定义日志格式，设置过滤信息，选择日志输出位置（文件、标准错误输出、网络等等）。 使用基本的logging配置在一般使用过程中，我们需要按照事件的严重程度将日志划分不同等级，">
+<meta name="twitter:image" content="http://shadowless.top/python日志模块logging使用介绍/20180617111350472.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Shadowless" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://shadowless.top/python/python日志模块logging使用介绍/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>python日志模块logging使用介绍 | Shadowless</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shadowless</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">备忘录</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">5</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">4</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">6</span></a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shadowless.top/python/python日志模块logging使用介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shadowless">
+      <meta itemprop="description" content="求知若饥，虚心若愚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shadowless">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python日志模块logging使用介绍
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-17 00:25:58 / 修改时间：23:47:23" itemprop="dateCreated datePublished" datetime="2018-06-17T00:25:58+08:00">2018-06-17</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">12k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在平时编写Python脚本时，需要调试就加<code>print</code>打印出来观察，这种操作在写一些简单的脚本时是迅速有效的。但是当进行复杂的应用开发时，这样调试就显得力不从心。所以我们需要使用Python标准库中的<code>logging</code>模块，该模块可以定义日志格式，设置过滤信息，选择日志输出位置（文件、标准错误输出、网络等等）。</p>
+<h1 id="使用基本的logging配置"><a href="#使用基本的logging配置" class="headerlink" title="使用基本的logging配置"></a>使用基本的logging配置</h1><p>在一般使用过程中，我们需要按照事件的严重程度将日志划分不同等级，便于我们观察和定位。<br>logging内置的日志级别为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line">logging.debug(<span class="string">"debug message"</span>)</span><br><span class="line">logging.info(<span class="string">"info message"</span>)</span><br><span class="line">logging.warning(<span class="string">"warning message"</span>)</span><br><span class="line">logging.error(<span class="string">"error message"</span>)</span><br><span class="line">logging.critical(<span class="string">"critical message"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>日志级别的数字值：</p>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>数字值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRITICAL</td>
+<td>50</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>40</td>
+</tr>
+<tr>
+<td>WARNING</td>
+<td>30</td>
+</tr>
+<tr>
+<td>INFO</td>
+<td>20</td>
+</tr>
+<tr>
+<td>DEBUG</td>
+<td>10</td>
+</tr>
+<tr>
+<td>NOTSET</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><code>logging</code>模块中的还有以下几个概念，<code>Handler</code>，<code>Formater</code>，<code>Filter</code>，<code>Logger</code>。</p>
+<ul>
+<li><code>Handler</code>: 日志处理器。处理日志信息的输出位置。</li>
+<li><code>Formater</code>：日志的格式化。设置日志的输出格式。</li>
+<li><code>Filter</code>: 日志过滤器。为日志设置过滤条件。</li>
+<li><code>Logger</code>： 日志记录器。在应用中使用该接口记录日志。</li>
+</ul>
+<p>首先我们开始最基本的日志配置：</p>
+<ol>
+<li>定义日志等级，在默认情况下，只有日志级别在WARNING及以上的信息才会被处理，所以我们需要设置适合的等级。</li>
+<li>设置日志的输出格式</li>
+<li>设置日志的输出位置</li>
+</ol>
+<p>以上三项设置，我们可以直接调用<code>logging</code>模块中的<code>basicConfig</code>方法，该方法会设置全局日志处理器root_handler,全局日志记录器root_logger,并依据制定参数设置Formater作为root_handler的格式化器。</p>
+<a id="more"></a>
+<p>使用方法：</p>
+<figure class="highlight python"><figcaption><span>log_basic.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logging.basicConfig(level=logging.INFO,</span><br><span class="line">                    format=<span class="string">"%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s"</span>,</span><br><span class="line">                    datefmt=<span class="string">"%a, %d %b %Y %H:%M:%S"</span>,</span><br><span class="line">                    filename=<span class="string">'parser_result.log'</span>,</span><br><span class="line">                    filemode=<span class="string">'w'</span></span><br><span class="line">                            )</span><br><span class="line"></span><br><span class="line">logging.info(<span class="string">"info message"</span>)</span><br><span class="line">logging.debug(<span class="string">"debug message"</span>)</span><br><span class="line">logging.warning(<span class="string">"warning message"</span>)</span><br><span class="line">logging.error(<span class="string">"error message"</span>)</span><br><span class="line">logging.critical(<span class="string">"critical message"</span>)</span><br></pre></td></tr></table></figure>
+<p>按照上述参数我们可以在parser_result.log文件中获得以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Sun, 17 Jun 2018 01:07:17 log_basic.py[line:10] INFO info message</span><br><span class="line">Sun, 17 Jun 2018 01:07:17 log_basic.py[line:12] WARNING warning message</span><br><span class="line">Sun, 17 Jun 2018 01:07:17 log_basic.py[line:13] ERROR error message</span><br><span class="line">Sun, 17 Jun 2018 01:07:17 log_basic.py[line:14] CRITICAL critical message</span><br></pre></td></tr></table></figure>
+<p>如果需要将日志打印在终端上，我们可以修改上述例子:</p>
+<figure class="highlight python"><figcaption><span>log_basic.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">logging.basicConfig(level=logging.INFO,</span><br><span class="line">                    format=<span class="string">"%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s"</span>,</span><br><span class="line">                    datefmt=<span class="string">"%a, %d %b %Y %H:%M:%S"</span>,</span><br><span class="line">                    stream=sys.stdout</span><br><span class="line">                            )</span><br><span class="line"></span><br><span class="line">logging.info(<span class="string">"info message"</span>)</span><br><span class="line">logging.debug(<span class="string">"debug message"</span>)</span><br><span class="line">logging.warning(<span class="string">"warning message"</span>)</span><br><span class="line">logging.error(<span class="string">"error message"</span>)</span><br><span class="line">logging.critical(<span class="string">"critical message"</span>)</span><br></pre></td></tr></table></figure>
+<p>Basic的参数介绍如下<br><figure class="highlight bash"><figcaption><span>basicConfig参数</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">filename: 指定日志文件名;</span><br><span class="line">filemode: 和file函数意义相同，制定日志文件的打开模式，<span class="string">'w'</span> or <span class="string">'a'</span>;</span><br><span class="line">format: 指定输出的格式和内容.</span><br><span class="line">    %(levelno)s: 日志级别数值</span><br><span class="line">    %(levelname)s:日志级别名称</span><br><span class="line">    %(pathname)s:当前程序路径，sys.argv[0]</span><br><span class="line">    %(filename)s:当前执行程序名</span><br><span class="line">    %(funcName)s:日志的当前函数</span><br><span class="line">    %(lineno)s:当前行号</span><br><span class="line">    %(asctime)s:日志时间</span><br><span class="line">    %(thread)d:线程ID</span><br><span class="line">    %(threadName)s:线程名称</span><br><span class="line">    %(process)d:进程ID</span><br><span class="line">    %(message)s:日志信息</span><br><span class="line">datafmp: 指定时间格式，同time.strftime();</span><br><span class="line">level: 设置日志级别，默认logging.WARNNING;</span><br><span class="line">stream: 指定将日志的输出流，可以sys.stderr,sys.stdout或文件，默认sys.stderr,当filename也指定，stream被忽略；</span><br></pre></td></tr></table></figure></p>
+<p>基本的设置使用logging.basic即可完成，后面介绍由Handler，Formater，Filter，Logger这些更细致的配置。</p>
+<h1 id="日志记录器Logger的使用"><a href="#日志记录器Logger的使用" class="headerlink" title="日志记录器Logger的使用"></a>日志记录器Logger的使用</h1><p>Logger为logging模块中的日志记录器，主要执行三项工作：</p>
+<ol>
+<li>为程序提供日志记录的接口</li>
+<li>判断日志所处级别，并判断是否需要过滤</li>
+<li>根据日志级别将该条日志分别发给不同Handler</li>
+</ol>
+<p>常用的方法为：</p>
+<ol>
+<li><code>Logger.setLevel()</code>: 设置日志等级</li>
+<li><code>Logger.addHandler()</code>: 添加一个<code>Handler</code></li>
+<li><code>Logger.removeHandler()</code>: 删除一个<code>Handler</code></li>
+<li><code>Logger.addFilter()</code>: 添加一个过滤器</li>
+</ol>
+<p>使用<code>Logger.getLogger()</code>可以获取一个<code>Logger</code>，如果未提供参数则获得<code>root Logger</code>。<br><code>logging.getLogger(&quot;APP&quot;)</code>获得一个名为APP的日志记录器<br><code>logging.getLogger(&quot;APP.run&quot;)</code>获得名为APP.run的记录器，该记录器为APP的子记录器</p>
+<p>示例代码如下：<br><figure class="highlight python"><figcaption><span>logging_logger.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">app</span><span class="params">()</span>:</span></span><br><span class="line">    app_logger = logging.getLogger(<span class="string">"APP"</span>)</span><br><span class="line">    app_logger.setLevel(logging.INFO)</span><br><span class="line">    app_formater = logging.Formatter(<span class="string">"%(name)s - %(asctime)s - %(filename)s: %(message)s"</span>)</span><br><span class="line">    app_handler = logging.StreamHandler(sys.stdout)</span><br><span class="line">    app_handler.setFormatter(app_formater)</span><br><span class="line">    app_logger.addHandler(app_handler)</span><br><span class="line"></span><br><span class="line">    app_logger.info(<span class="string">"APP config ..."</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></span><br><span class="line">    run_logger = logging.getLogger(<span class="string">"APP.run"</span>)</span><br><span class="line">    run_logger.setLevel(logging.INFO)</span><br><span class="line">    run_formater = logging.Formatter(<span class="string">"%(name)s - %(asctime)s - %(filename)s: %(message)s"</span>)</span><br><span class="line">    run_handler = logging.StreamHandler()</span><br><span class="line">    run_handler.setFormatter(run_formater)</span><br><span class="line">    run_logger.addHandler(run_handler)</span><br><span class="line">    </span><br><span class="line">    run_logger.info(<span class="string">"running now!"</span>)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    app()</span><br><span class="line">    run()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure></p>
+<p>执行代码输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shadowless@shadowless-PC:$ python logging_logger.py</span><br><span class="line">APP - 2018-06-17 22:25:11,541 - logging_logger.py: APP config ...</span><br><span class="line">APP.run - 2018-06-17 22:25:11,542 - logging_logger.py: running now!</span><br><span class="line">APP.run - 2018-06-17 22:25:11,542 - logging_logger.py: running now!</span><br></pre></td></tr></table></figure>
+<p>观察输出结果，为何会有两条<code>unning now</code>的打印，这是因为默认情况下，一个<code>logger</code>名为<code>propagate</code>属性，当该属性值为<code>True</code>则该<code>logger</code>的输出会朝着上一级传播，最终都会交给<code>root Logger</code>。<br>有如下解决方案：</p>
+<ol>
+<li>在创建logger时将<code>propagate</code>属性置为<code>False</code>。</li>
+<li>将APP.run的Handler移除，全部日志都交给APP Logger的处理器去输出。</li>
+</ol>
+<p>一般情况下，为了使程序日志记录有调理，我们也可以将root Logger的日志等级设置成最高，或者移除其所有日志处理器。</p>
+<h1 id="使用不同的Handler来处理日志的输出"><a href="#使用不同的Handler来处理日志的输出" class="headerlink" title="使用不同的Handler来处理日志的输出"></a>使用不同的Handler来处理日志的输出</h1><p>logging模块中内置的Handler有以下几种：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>StreamHandler</td>
+<td>日志输出到流，可以是sys.stderr或sys.stdout或文件</td>
+</tr>
+<tr>
+<td>FileHandler</td>
+<td>日志输出到文件</td>
+</tr>
+<tr>
+<td>BaseRotatingHandler</td>
+<td>基本的日志回滚方式</td>
+</tr>
+<tr>
+<td>RotatingHandler</td>
+<td>日志回滚方式，支持日志文件最大数量和日志文件回滚</td>
+</tr>
+<tr>
+<td>TimeRotatingHandler</td>
+<td>日志回滚方式，在一定时间区域回滚日志文件</td>
+</tr>
+<tr>
+<td>SocketHandler</td>
+<td>远程输出到TCP/IP sockets</td>
+</tr>
+<tr>
+<td>DatagramHandler</td>
+<td>远程输出日志到UDP socckets</td>
+</tr>
+<tr>
+<td>SMTPHandler</td>
+<td>远程输出日志到邮件地址</td>
+</tr>
+<tr>
+<td>SysLogHandler</td>
+<td>日志输出到syslog</td>
+</tr>
+<tr>
+<td>NTEventLogHandler</td>
+<td>远程输出日志到Windows NT/2000/XP的事件日志</td>
+</tr>
+<tr>
+<td>MemoryHandler</td>
+<td>日志输出到内存中的指定buffer</td>
+</tr>
+<tr>
+<td>HTTPHandler</td>
+<td>通过”get”,”post”远程输出到HTTP服务器</td>
+</tr>
+</tbody>
+</table>
+<h2 id="StreamHandler使用"><a href="#StreamHandler使用" class="headerlink" title="StreamHandler使用"></a>StreamHandler使用</h2><p>StreamHandler可以将日志输出到流。如标准输出流，标准错误输出流，文件等。<br>使用方法可以参考如下例子：</p>
+<figure class="highlight python"><figcaption><span>logging_stream.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">console_logger = logging.getLogger()</span><br><span class="line">console_logger.setLevel(level=logging.INFO)</span><br><span class="line">formatter = logging.Formatter(<span class="string">"%(pathname)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s"</span>)</span><br><span class="line">console_handler = logging.StreamHandler(sys.stderr)</span><br><span class="line">console_handler.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">console_logger.info(<span class="string">"输出到命令行"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="FileHandler使用"><a href="#FileHandler使用" class="headerlink" title="FileHandler使用"></a>FileHandler使用</h2><p>FileHandler可以将日志输出到文件。<br><figure class="highlight python"><figcaption><span>logging_file.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line">file_logger = logging.getLogger()</span><br><span class="line">file_logger.setLevel(level=logging.INFO)</span><br><span class="line">formatter = logging.Formatter(<span class="string">"%(pathname)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s"</span>)</span><br><span class="line">file_handler = logging.FileHanlder(<span class="string">"logging_file.log"</span>)</span><br><span class="line">file_handler.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">file_logger.info(<span class="string">"输出到文件"</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="RotatingFileHandler"><a href="#RotatingFileHandler" class="headerlink" title="RotatingFileHandler"></a>RotatingFileHandler</h2><figure class="highlight python"><figcaption><span>logging_rotatingfile.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line">file_logger = logging.getLogger()</span><br><span class="line">file_logger.setLevel(level=logging.INFO)</span><br><span class="line">formatter = logging.Formatter(<span class="string">"%(pathname)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s"</span>)</span><br><span class="line">file_handler = logging.handlers.RotatingFileHandler(<span class="string">"log/logging_file.log"</span>, maxBytes=<span class="number">1</span>*<span class="number">1024</span>, backupCount=<span class="number">3</span>)</span><br><span class="line">file_handler.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">file_logger.info(<span class="string">"输出到文件,当日志达到1KB时将日志备份，总备份个数为3个，logging_file.log中始终为最新的日志"</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="使用Filter过滤器"><a href="#使用Filter过滤器" class="headerlink" title="使用Filter过滤器"></a>使用Filter过滤器</h1><blockquote><p>Handlers和Loggers可以使用Filters来完成比级别更复杂的过滤。Filter基类只允许特定Logger层次以下的事件。例如用‘A.B’初始化的Filter允许Logger ‘A.B’, ‘A.B.C’, ‘A.B.C.D’, ‘A.B.D’等记录的事件，logger‘A.BB’, ‘B.A.B’ 等就不行。 如果用空字符串来初始化，所有的事件都接受。<br>创建方法:  <code>filter = logging.Filter(name=&#39;&#39;)</code></p>
+<p>概念总结：<br>熟悉了这些概念之后，有另外一个比较重要的事情必须清楚，即Logger是一个树形层级结构;<br>Logger可以包含一个或多个Handler和Filter，即Logger与Handler或Fitler是一对多的关系;<br>一个Logger实例可以新增多个Handler，一个Handler可以新增多个格式化器或多个过滤器，而且日志级别将会继承。</p>
+<p><img src="/python日志模块logging使用介绍/20180617111350472.png" alt=""></p>
+<footer><strong>python logging模块使用教程</strong><cite><a href="https://www.jianshu.com/p/feb86c06c4f4" target="_blank" rel="noopener">好吃的野菜</a></cite></footer></blockquote>
+<p>示例，使用filter控制日志输出到log文件与控制台<br><figure class="highlight python"><figcaption><span>logging_filter.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ContextFilter</span><span class="params">(logging.Filter)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    这是一个控制日志记录的过滤器。</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">filter</span><span class="params">(self, record)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            filter_key = record.TASK</span><br><span class="line">        <span class="keyword">except</span> AttributeError:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> filter_key == <span class="string">"logToConsole"</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># 创建日志对象</span></span><br><span class="line">    logger = logging.getLogger(__name__)</span><br><span class="line">    logger.setLevel(logging.DEBUG)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建日志处理器，记录日志到文件</span></span><br><span class="line">    log_path = <span class="string">"./log.log"</span></span><br><span class="line">    file_handler = logging.FileHandler(log_path)</span><br><span class="line">    file_handler.setLevel(logging.INFO)</span><br><span class="line">    file_fmt = <span class="string">"%(asctime)-15s %(levelname)s [%(filename)s %(lineno)d] %(message)s"</span></span><br><span class="line">    file_formatter = logging.Formatter(file_fmt)</span><br><span class="line">    file_handler.setFormatter(file_formatter)</span><br><span class="line">    logger.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 添加日志处理器，输出日志到控制台</span></span><br><span class="line">    console_handler = logging.StreamHandler(sys.stdout)</span><br><span class="line">    console_handler.setLevel(logging.WARN)</span><br><span class="line"></span><br><span class="line">    console_fmt = <span class="string">'%(asctime)-15s [%(TASK)s] %(message)s'</span></span><br><span class="line">    console_formatter = logging.Formatter(console_fmt)</span><br><span class="line">    console_handler.setFormatter(console_formatter)</span><br><span class="line"></span><br><span class="line">    console_filter = ContextFilter()</span><br><span class="line">    console_handler.addFilter(console_filter)</span><br><span class="line"></span><br><span class="line">    logger.addHandler(console_handler)</span><br><span class="line"></span><br><span class="line">    filter_dict = &#123;<span class="string">'TASK'</span>: <span class="string">'logToConsole'</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 记录日志</span></span><br><span class="line">    logger.debug(<span class="string">'debug message'</span>)</span><br><span class="line">    logger.info(<span class="string">'info message'</span>)</span><br><span class="line">    logger.warning(<span class="string">'warn message'</span>)</span><br><span class="line">    logger.error(<span class="string">'error message1'</span>, extra=filter_dict)</span><br><span class="line">    logger.error(<span class="string">'error message2'</span>)</span><br></pre></td></tr></table></figure></p>
+<h1 id="logging模块工作流程"><a href="#logging模块工作流程" class="headerlink" title="logging模块工作流程"></a>logging模块工作流程</h1><p><img src="/python日志模块logging使用介绍/20180617112412833.png" alt=""></p>
+<ol>
+<li>判断日志的等级是否大于Logger对象的等级，如果大于，则往下执行，否则，流程结束。</li>
+<li>产生日志。第一步，判断是否有异常，如果有，则添加异常信息。第二步，处理日志记录方法(如debug，info等)中的占位符，即一般的字符串格式化处理。</li>
+<li>使用注册到Logger对象中的Filters进行过滤。如果有多个过滤器，则依次过滤；只要有一个过滤器返回假，则过滤结束，且该日志信息将丢弃，不再处理，而处理流程也至此结束。否则，处理流程往下执行。</li>
+<li>在当前Logger对象中查找Handlers，如果找不到任何Handler，则往上到该Logger对象的父Logger中查找；如果找到一个或多个Handler，则依次用Handler来处理日志信息。但在每个Handler处理日志信息过程中，会首先判断日志信息的等级是否大于该Handler的等级，如果大于，则往下执行(由Logger对象进入Handler对象中)，否则，处理流程结束。</li>
+<li>执行Handler对象中的filter方法，该方法会依次执行注册到该Handler对象中的Filter。如果有一个Filter判断该日志信息为假，则此后的所有Filter都不再执行，而直接将该日志信息丢弃，处理流程结束。</li>
+<li>使用Formatter类格式化最终的输出结果。 注：Formatter同上述第2步的字符串格式化不同，它会添加额外的信息，比如日志产生的时间，产生日志的源代码所在的源文件的路径等等。</li>
+<li>真正地输出日志信息(到网络，文件，终端，邮件等)。至于输出到哪个目的地，由Handler的种类来决定。</li>
+</ol>
+<h1 id="logging的配置"><a href="#logging的配置" class="headerlink" title="logging的配置"></a>logging的配置</h1><p>logging可以采用一下几种方式进行配置：</p>
+<ol>
+<li>显式创建记录器Logger、处理器Handler和格式化器Formatter，并进行相关设置；</li>
+<li>通过简单方式进行配置，使用basicConfig()函数直接进行配置；</li>
+<li>通过配置文件进行配置，使用fileConfig()函数读取配置文件；</li>
+<li>通过配置字典进行配置，使用dictConfig()函数读取配置信息；</li>
+<li>通过网络进行配置，使用listen()函数进行网络配置。</li>
+</ol>
+<blockquote>
+<p>参考官方文档 <a href="https://yiyibooks.cn/xx/python_352/howto/logging.html#logging-advanced-tutorial" target="_blank" rel="noopener">python 3.52中文文档</a></p>
+</blockquote>
+<h2 id="显式创建"><a href="#显式创建" class="headerlink" title="显式创建"></a>显式创建</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="comment"># create logger</span></span><br><span class="line">logger = logging.getLogger(<span class="string">'simple_example'</span>)</span><br><span class="line">logger.setLevel(logging.DEBUG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># create console handler and set level to debug</span></span><br><span class="line">ch = logging.StreamHandler()</span><br><span class="line">ch.setLevel(logging.DEBUG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># create formatter</span></span><br><span class="line">formatter = logging.Formatter(<span class="string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># add formatter to ch</span></span><br><span class="line">ch.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line"><span class="comment"># add ch to logger</span></span><br><span class="line">logger.addHandler(ch)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 'application' code</span></span><br><span class="line">logger.debug(<span class="string">'debug message'</span>)</span><br><span class="line">logger.info(<span class="string">'info message'</span>)</span><br><span class="line">logger.warn(<span class="string">'warn message'</span>)</span><br><span class="line">logger.error(<span class="string">'error message'</span>)</span><br><span class="line">logger.critical(<span class="string">'critical message'</span>)</span><br></pre></td></tr></table></figure>
+<p>输出如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ python simple_logging_module.py</span><br><span class="line">2005-03-19 15:10:26,618 - simple_example - DEBUG - debug message</span><br><span class="line">2005-03-19 15:10:26,620 - simple_example - INFO - info message</span><br><span class="line">2005-03-19 15:10:26,695 - simple_example - WARNING - warn message</span><br><span class="line">2005-03-19 15:10:26,697 - simple_example - ERROR - error message</span><br><span class="line">2005-03-19 15:10:26,773 - simple_example - CRITICAL - critical message</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用ini配置文件设置"><a href="#使用ini配置文件设置" class="headerlink" title="使用ini配置文件设置"></a>使用ini配置文件设置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> logging.config</span><br><span class="line"></span><br><span class="line">logging.config.fileConfig(<span class="string">'logging.conf'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># create logger</span></span><br><span class="line">logger = logging.getLogger(<span class="string">'simpleExample'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 'application' code</span></span><br><span class="line">logger.debug(<span class="string">'debug message'</span>)</span><br><span class="line">logger.info(<span class="string">'info message'</span>)</span><br><span class="line">logger.warn(<span class="string">'warn message'</span>)</span><br><span class="line">logger.error(<span class="string">'error message'</span>)</span><br><span class="line">logger.critical(<span class="string">'critical message'</span>)</span><br></pre></td></tr></table></figure>
+<p>配置文件如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[loggers]</span></span><br><span class="line"><span class="attr">keys</span>=root,simpleExample</span><br><span class="line"></span><br><span class="line"><span class="section">[handlers]</span></span><br><span class="line"><span class="attr">keys</span>=consoleHandler</span><br><span class="line"></span><br><span class="line"><span class="section">[formatters]</span></span><br><span class="line"><span class="attr">keys</span>=simpleFormatter</span><br><span class="line"></span><br><span class="line"><span class="section">[logger_root]</span></span><br><span class="line"><span class="attr">level</span>=DEBUG</span><br><span class="line"><span class="attr">handlers</span>=consoleHandler</span><br><span class="line"></span><br><span class="line"><span class="section">[logger_simpleExample]</span></span><br><span class="line"><span class="attr">level</span>=DEBUG</span><br><span class="line"><span class="attr">handlers</span>=consoleHandler</span><br><span class="line"><span class="attr">qualname</span>=simpleExample</span><br><span class="line"><span class="attr">propagate</span>=<span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="section">[handler_consoleHandler]</span></span><br><span class="line"><span class="attr">class</span>=StreamHandler</span><br><span class="line"><span class="attr">level</span>=DEBUG</span><br><span class="line"><span class="attr">formatter</span>=simpleFormatter</span><br><span class="line"><span class="attr">args</span>=(sys.stdout,)</span><br><span class="line"></span><br><span class="line"><span class="section">[formatter_simpleFormatter]</span></span><br><span class="line"><span class="attr">format</span>=%(asctime)s - %(name)s - %(levelname)s - %(message)s</span><br><span class="line"><span class="attr">datefmt</span>=</span><br></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ python simple_logging_config.py</span><br><span class="line">2005-03-19 15:38:55,977 - simpleExample - DEBUG - debug message</span><br><span class="line">2005-03-19 15:38:55,979 - simpleExample - INFO - info message</span><br><span class="line">2005-03-19 15:38:56,054 - simpleExample - WARNING - warn message</span><br><span class="line">2005-03-19 15:38:56,055 - simpleExample - ERROR - error message</span><br><span class="line">2005-03-19 15:38:56,130 - simpleExample - CRITICAL - critical message</span><br></pre></td></tr></table></figure>
+<div class="note warning"><p>fileConfig()函数有个参数disable_existing_loggers默认为True，主要是为了向后兼容。它会使fileConfig()调用之前的所有记录器被禁用，除非这些记录器或者它们的祖先显式的出现在配置之中；这也许是／不是你需要的。请参考文档以得到更多的信息，如果需要，请指定False。<br>传递给dictConfig()的字典可以有键disable_existing_loggers，其值为布尔类型，如果没有显式的指明，其默认值为True。这会导致上述的记录器禁用行为，也许不是你希望的，这种情况下将其值设为False。</p></div>
+<h1 id="使用Dict，Json，YAML"><a href="#使用Dict，Json，YAML" class="headerlink" title="使用Dict，Json，YAML"></a>使用Dict，Json，YAML</h1><blockquote>
+<p>在Python 3.2中，引入了一种新的配置日志记录的方法，使用字典来保存配置信息。它提供的功能是上述的基于文件的配置的功能的超集，推荐在新的应用和部署中使用。因为用Python的字典来保存配置信息，而你可以用不同的方法来产生字典，所以你有更多的配置选择。例如你可以使用JSON格式的配置文件，或者使用YAML格式的文件来产生配置字典。或者你可以用Python代码来构造字典，从socket中接受它的pickle形式（Python一种序列化机制），或者任何对你的应用有意义的方式来构造字典。</p>
+</blockquote>
+<p>使用YAML格式：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">formatters:</span></span><br><span class="line"><span class="attr">  simple:</span></span><br><span class="line"><span class="attr">    format:</span> <span class="string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</span></span><br><span class="line"><span class="attr">handlers:</span></span><br><span class="line"><span class="attr">  console:</span></span><br><span class="line"><span class="attr">    class:</span> <span class="string">logging.StreamHandler</span></span><br><span class="line"><span class="attr">    level:</span> <span class="string">DEBUG</span></span><br><span class="line"><span class="attr">    formatter:</span> <span class="string">simple</span></span><br><span class="line"><span class="attr">    stream:</span> <span class="attr">ext://sys.stdout</span></span><br><span class="line"><span class="attr">loggers:</span></span><br><span class="line"><span class="attr">  simpleExample:</span></span><br><span class="line"><span class="attr">    level:</span> <span class="string">DEBUG</span></span><br><span class="line"><span class="attr">    handlers:</span> <span class="string">[console]</span></span><br><span class="line"><span class="attr">    propagate:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">root:</span></span><br><span class="line"><span class="attr">  level:</span> <span class="string">DEBUG</span></span><br><span class="line"><span class="attr">  handlers:</span> <span class="string">[console]</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shadowless</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://shadowless.top/python/python日志模块logging使用介绍/" title="python日志模块logging使用介绍">http://shadowless.top/python/python日志模块logging使用介绍/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/python/Python使用configparser解析配置文件/" rel="next" title="Python使用configparser解析配置文件">
+                <i class="fa fa-chevron-left"></i> Python使用configparser解析配置文件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjk1Ny8xMzQ5Mw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Shadowless" />
+            
+              <p class="site-author-name" itemprop="name">Shadowless</p>
+              <p class="site-description motion-element" itemprop="description">求知若饥，虚心若愚</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/Shadowless-ly" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ly9413ly@163.com" target="_blank" title="Mail"><i class="fa fa-fw fa-envelope"></i>Mail</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=376886689@qq.com" target="_blank" title="QQ-Mail"><i class="fa fa-fw fa-envelope"></i>QQ-Mail</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://wpa.qq.com/msgrd?v=3&uin=376886689&site=qq&menu=yes" target="_blank" title="QQ"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用基本的logging配置"><span class="nav-number">1.</span> <span class="nav-text">使用基本的logging配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志记录器Logger的使用"><span class="nav-number">2.</span> <span class="nav-text">日志记录器Logger的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用不同的Handler来处理日志的输出"><span class="nav-number">3.</span> <span class="nav-text">使用不同的Handler来处理日志的输出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#StreamHandler使用"><span class="nav-number">3.1.</span> <span class="nav-text">StreamHandler使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FileHandler使用"><span class="nav-number">3.2.</span> <span class="nav-text">FileHandler使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RotatingFileHandler"><span class="nav-number">3.3.</span> <span class="nav-text">RotatingFileHandler</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Filter过滤器"><span class="nav-number">4.</span> <span class="nav-text">使用Filter过滤器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#logging模块工作流程"><span class="nav-number">5.</span> <span class="nav-text">logging模块工作流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#logging的配置"><span class="nav-number">6.</span> <span class="nav-text">logging的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#显式创建"><span class="nav-number">6.1.</span> <span class="nav-text">显式创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ini配置文件设置"><span class="nav-number">6.2.</span> <span class="nav-text">使用ini配置文件设置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Dict，Json，YAML"><span class="nav-number">7.</span> <span class="nav-text">使用Dict，Json，YAML</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shadowless</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">34k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">31 分钟</span>
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "box";
+      
+          flOptions.boxForm = "horizontal";
+      
+          flOptions.position = "middleRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.3.0"></script>
+
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>
